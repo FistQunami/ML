@@ -1,0 +1,47 @@
+#include <iostream>
+#include <vector>
+#include <set>
+
+void dfs(int node, std::vector<std::vector<int>>& graph, std::set<int>& visited, std::vector<int>& component) {
+    visited.insert(node);
+    component.push_back(node);
+    
+    for (int neighbor : graph[node]) {
+        if (visited.find(neighbor) == visited.end()) {
+            dfs(neighbor, graph, visited, component);
+        }
+    }
+}
+
+int main() {
+    int N;
+    std::cin >> N;
+    
+    std::vector<std::vector<int>> graph(N);
+    
+    int u, v;
+    while (std::cin >> u >> v) {
+        graph[u].push_back(v);
+        graph[v].push_back(u);
+    }
+    
+    std::vector<std::vector<int>> components;
+    std::set<int> visited;
+    
+    for (int i = 0; i < N; i++) {
+        if (visited.find(i) == visited.end()) {
+            std::vector<int> component;
+            dfs(i, graph, visited, component);
+            components.push_back(component);
+        }
+    }
+    
+    for (const auto& comp : components) {
+        for (int node : comp) {
+            std::cout << node << " ";
+        }
+        std::cout << std::endl;
+    }
+    
+    return 0;
+}
